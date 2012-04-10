@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="plugin" group="system" method="upgrade">
+        <name>System - jdbg</name>
+        <author>$Author$</author>
+        <creationDate>$Date$</creationDate>
+        <copyright>Copyright (C) $Year$ $Owner$. All rights reserved. $Copyrightsee$</copyright>
+        <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+        <authorEmail>$Email$</authorEmail>
+        <authorUrl>$Url$</authorUrl>
+        <version>$Ver$</version>
+        <description>
+        <![CDATA[
+        <p>jdbg is a nifty debugging tool that allows you to print in various formats and also enables you to set condition for the printing. Documentation can be found at <a href="http://jproven.com/extensions/jdbg">here</a>.</p>
+        ]]>
+        </description>
+        <files>
+                <filename plugin="jdbg">jdbg.php</filename>
+                <folder>FirePHPCore</folder>
+                <folder>kint</folder>
+                <folder>krumo</folder>
+        </files>
+        <languages folder="language">
+                <language tag="en-GB">en-GB.plg_system_jdbg.ini</language>
+        </languages>
+        <config>
+                <fields name="params">
+                        <fieldset name="basic">
+                                <field name="mode" type="list" default="krumo" label="PLG_JDBG_FIELD_MODE_LABEL" description="PLG_JDBG_FIELD_MODE_DESC">
+                                        <option value="pre">PLG_JDBG_OPTION_MODE_PRE</option>
+                                        <option value="krumo">PLG_JDBG_OPTION_MODE_KRUMO</option>
+                                        <option value="dump">PLG_JDBG_OPTION_MODE_DUMP</option>
+                                        <option value="area">PLG_JDBG_OPTION_MODE_AREA</option>
+                                        <option value="log">PLG_JDBG_OPTION_MODE_LOG</option>
+                                        <option value="firephp">PLG_JDBG_OPTION_MODE_FIREPHP</option>
+                                </field>
+
+                                <field name="where" type="list" default="site" label="PLG_JDBG_FIELD_WHERE_LABEL" description="PLG_JDBG_FIELD_WHERE_DESC">
+                                        <option value="site">PLG_JDBG_OPTION_WHERE_SITE</option>
+                                        <option value="admin">PLG_JDBG_OPTION_WHERE_ADMIN</option>
+                                        <option value="both">PLG_JDBG_OPTION_WHERE_BOTH</option>
+                                </field>
+
+                                <field name="override" type="radio" default="1" label="PLG_JDBG_FIELD_OVERRIDE_LABEL" description="PLG_JDBG_FIELD_OVERRIDE_DESC">
+                                        <option value="1">JYes</option>
+                                        <option value="0">JNo</option>
+                                </field>
+
+                                <field name="@spacer-skin" type="spacer" label="PLG_JDBG_SECTION_SKIN" />
+
+                                <field name="skin" type="list" default="schablon" label="PLG_JDBG_FIELD_SKIN_LABEL" description="PLG_JDBG_FIELD_SKIN_DESC">
+                                        <option value="default">PLG_JDBG_OPTION_SKIN_DEFAULT</option>
+                                        <option value="blue">PLG_JDBG_OPTION_SKIN_BLUE</option>
+                                        <option value="green">PLG_JDBG_OPTION_SKIN_GREEN</option>
+                                        <option value="orange">PLG_JDBG_OPTION_SKIN_ORANGE</option>
+                                        <option value="schablon">PLG_JDBG_OPTION_SKIN_SCHABLON</option>
+                                </field>
+
+                                <field name="@spacer-log" type="spacer" label="PLG_JDBG_SECTION_LOG" />
+
+                                <field name="log_file" type="text" default="/tmp/jdbg.log" label="PLG_JDBG_FIELD_LOG_FILE_LABEL" description="PLG_JDBG_FIELD_LOG_FILE_DESC" />
+
+                                <field name="reset_on_page_load" type="radio" default="0" label="PLG_JDBG_FIELD_RESET_PAGE_LOAD_LABEL" description="PLG_JDBG_FIELD_RESET_PAGE_LOAD_DESC">
+                                        <option value="1">JYes</option>
+                                        <option value="0">JNo</option>
+                                </field>
+
+                                <field name="ints" type="radio" default="1" label="PLG_JDBG_FIELD_APPEND_TS_BEFORE_EVERY_LOG_LABEL" description="PLG_JDBG_FIELD_APPEND_TS_BEFORE_EVERY_LOG_DESC">
+                                        <option value="1">JYes</option>
+                                        <option value="0">JNo</option>
+                                </field>
+                        </fieldset>
+                </fields>
+        </config>
+        <params name="basic">
+                <param name="mode" type="list" default="krumo" label="PLG_JDBG_FIELD_MODE_LABEL" description="PLG_JDBG_FIELD_MODE_DESC">
+                        <option value="pre">PLG_JDBG_OPTION_MODE_PRE</option>
+                        <option value="krumo">PLG_JDBG_OPTION_MODE_KRUMO</option>
+                        <option value="kint">PLG_JDBG_OPTION_MODE_KINT</option>
+                        <option value="dump">PLG_JDBG_OPTION_MODE_DUMP</option>
+                        <option value="area">PLG_JDBG_OPTION_MODE_AREA</option>
+                        <option value="log">PLG_JDBG_OPTION_MODE_LOG</option>
+                        <option value="email">PLG_JDBG_OPTION_MODE_EMAIL</option>
+                        <option value="firephp">PLG_JDBG_OPTION_MODE_FIREPHP</option>
+                </param>
+
+                <param name="where" type="list" default="site" label="PLG_JDBG_FIELD_WHERE_LABEL" description="PLG_JDBG_FIELD_WHERE_DESC">
+                        <option value="site">PLG_JDBG_OPTION_WHERE_SITE</option>
+                        <option value="admin">PLG_JDBG_OPTION_WHERE_ADMIN</option>
+                        <option value="both">PLG_JDBG_OPTION_WHERE_BOTH</option>
+                </param>
+
+                <param name="override" type="radio" default="1" label="PLG_JDBG_FIELD_OVERRIDE_LABEL" description="PLG_JDBG_FIELD_OVERRIDE_DESC">
+                        <option value="1">JYes</option>
+                        <option value="0">JNo</option>
+                </param>
+
+                <param name="@spacer-skin" type="spacer" label="PLG_JDBG_SECTION_SKIN" />
+
+                <param name="skin" type="list" default="schablon" label="PLG_JDBG_FIELD_SKIN_LABEL" description="PLG_JDBG_FIELD_SKIN_DESC">
+                        <option value="default">PLG_JDBG_OPTION_SKIN_DEFAULT</option>
+                        <option value="blue">PLG_JDBG_OPTION_SKIN_BLUE</option>
+                        <option value="green">PLG_JDBG_OPTION_SKIN_GREEN</option>
+                        <option value="orange">PLG_JDBG_OPTION_SKIN_ORANGE</option>
+                        <option value="schablon">PLG_JDBG_OPTION_SKIN_SCHABLON</option>
+                </param>
+
+                <param name="@spacer-log" type="spacer" label="PLG_JDBG_SECTION_LOG" />
+
+                <param name="log_file" type="text" default="/tmp/jdbg.log" label="PLG_JDBG_FIELD_LOG_FILE_LABEL" description="PLG_JDBG_FIELD_LOG_FILE_DESC" />
+
+                <param name="reset_on_page_load" type="radio" default="0" label="PLG_JDBG_FIELD_RESET_PAGE_LOAD_LABEL" description="PLG_JDBG_FIELD_RESET_PAGE_LOAD_DESC">
+                        <option value="1">JYes</option>
+                        <option value="0">JNo</option>
+                </param>
+
+                <param name="ints" type="radio" default="1" label="PLG_JDBG_FIELD_APPEND_TS_BEFORE_EVERY_LOG_LABEL" description="PLG_JDBG_FIELD_APPEND_TS_BEFORE_EVERY_LOG_DESC">
+                        <option value="1">JYes</option>
+                        <option value="0">JNo</option>
+                </param>
+                
+                <param name="@spacer-email" type="spacer" label="PLG_JDBG_SECTION_EMAIL" />
+
+                <param name="email" type="text" default="" label="PLG_JDBG_EMAIL_LABEL" description="PLG_JDBG_EMAIL_DESC" />
+        </params>        
+</extension>
