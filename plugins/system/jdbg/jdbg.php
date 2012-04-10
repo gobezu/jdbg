@@ -132,6 +132,10 @@ class jdbg {
                 jdbg::pf($val, jdbg::$MODE, $var_val, $var_cond, $exit_mode, true);
         }
 
+        public static function pfx($val, $mode = 'pre', $var_val = null, $var_cond = null, $exit_mode = jdbg::EXIT_DONT) {
+                jdbg::pf($val, $mode, $var_val, $var_cond, $exit_mode, true);
+        }
+
         public static function pex($val, $var_val = null, $var_cond = null) {
                 jdbg::px($val, $var_val, $var_cond, jdbg::EXIT_ALWAYS);
         }
@@ -185,7 +189,7 @@ class jdbg {
                 
                 if ($xdebug && in_array('xdebug', get_loaded_extensions()))
                         if ($mode == 'email' || strpos($mode, 'file') !== false)
-                                $msg = xdebug_get_function_stack (JText::_('From jdbg'));
+                                $msg = self::_xs();
                         else 
                                 xdebug_print_function_stack(JText::_('From jdbg'));
 
@@ -278,6 +282,22 @@ class jdbg {
                 if ($exit_mode == jdbg::EXIT_ALWAYS) {
                         exit(0);
                 }
+        }
+        
+        private static function _xs($glue="\t") {
+                $stack = xdebug_get_function_stack (JText::_('From jdbg'));
+                $order = array('file'=>1, 'line'=>2, 'class'=>3, 'function'=>4);
+                $lines = array();
+                foreach ($stack as $callNo => $call) {
+                        $lines[$callNo] = array();
+                        foreach ($call as $partName => $part) {
+                                if (isset($order[$partName])) 
+                                        $lines[$callNo][$order[$partName]-1] = $part;
+                        }
+                        $lines[$callNo] = implode($glue, $lines[$callNo]);
+                }
+                $lines = implode("\n", $lines);
+                return $lines;
         }
         
         private static function _val($val) {
