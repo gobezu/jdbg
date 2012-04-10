@@ -2,15 +2,14 @@ Joomla! debugging tool compatible with version 2.5+
 
 jdbg allows you to print in various formats and also enables you to set condition for the printing. You can direct the output to to a predefined log file which comes really useful in case you must do what you shouldn't normally do, namely debug on a live site.
 
-_ 
-jdbg::p($var);
+Ex 1. jdbg::p($var);
 simply prints $var with the printer assigned in jdbg plugin configuration
 
 Ex 2. jdbg::p($var, $varCond, "re:[a-z]+");
 prints $var with the printer assigned in jdbg plugin configuration only if $varCond matches the given regular expression of [a-z]+
 
 Ex 3. jdbg::p($var, $varCond, jdbg::IS_EMPTY);
-prints $var with the printer assigned in jdbg plugin configuration only if $varCond is empty (defined as not isset or != '')
+prints $var with the printer assigned in plugin configuration only if $varCond is empty (defined as not isset or != '')
 
 Ex 4. jdbg::pf($var, 'area');
 simply prints $var overriding the printer assigned in jdbg plugin configuration and uses instead textarea
