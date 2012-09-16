@@ -23,10 +23,6 @@ class plgSystemJdbg extends JPlugin {
                 } else if (jdbg::$MODE == 'krumo') {
                         require_once dirname(__FILE__) . '/krumo/class.krumo.php';
                         define('KRUMO_INIFILE', dirname(__FILE__) . '/krumo/krumo.ini');
-                } else if (jdbg::$MODE == 'firephp') {
-                        jdbg::$LIB = 'firephp';
-                        require_once dirname(__FILE__) . '/FirePHPCore/fb.php';
-                        FB::setEnabled();
                 }
                 
                 jdbg::$JDEBUG_OVERRIDE = $params->get('override', true);
@@ -34,17 +30,18 @@ class plgSystemJdbg extends JPlugin {
                 if (!JDEBUG && !jdbg::$JDEBUG_OVERRIDE) return;
 
                 $app = JFactory::getApplication();
-
-                if ($params->get('mode') != 'both' && $app->getName() != $params->get('where')) return;
-
-                if (jdbg::$MODE == 'file') {
-                        jimport('joomla.filesystem.file');
-                        
-                        jdbg::$LOG_FILE = $params->get('log_file', '/tmp/jdbg.log');
-                        jdbg::$LOG_FILE = JPath::clean(JPATH_SITE . '/' . jdbg::$LOG_FILE);
-
-                        if ($params->get('reset_on_page_load') && JFile::exists(jdbg::$LOG_FILE)) JFile::delete(jdbg::$LOG_FILE);
+                
+                if ($params->get('where') != 'both' && $app->getName() != $params->get('where')) {
+                        jdbg::$DONT = true;
+                        return;
                 }
+
+                jimport('joomla.filesystem.file');
+
+                jdbg::$LOG_FILE = $params->get('log_file', '/tmp/jdbg.log');
+                jdbg::$LOG_FILE = JPath::clean(JPATH_SITE . '/' . jdbg::$LOG_FILE);
+                
+                if ($params->get('reset_on_page_load') && JFile::exists(jdbg::$LOG_FILE)) JFile::delete(jdbg::$LOG_FILE);
 
                 jdbg::$INTS = $params->get('ints');
 
@@ -112,6 +109,7 @@ class jdbg {
         public static $MODE = 'pre';
         public static $LIB = 'krumo';
         public static $INTS = true;
+        public static $DONT = false;
 
         /**
          *
@@ -120,24 +118,24 @@ class jdbg {
          * @param <type> $var_cond
          * @param <type> $exit_mode
          */
-        public static function p($val, $var_val = null, $var_cond = null, $exit_mode = jdbg::EXIT_DONT) {
-                jdbg::pf($val, jdbg::$MODE, $var_val, $var_cond, $exit_mode);
+        public static function p($val, $var_val = null, $var_cond = null, $exit_mode = self::EXIT_DONT) {
+                self::pf($val, self::$MODE, $var_val, $var_cond, $exit_mode);
         }
 
         public static function pe($val, $var_val = null, $var_cond = null) {
-                jdbg::p($val, $var_val, $var_cond, jdbg::EXIT_ALWAYS);
+                self::p($val, $var_val, $var_cond, self::EXIT_ALWAYS);
         }
 
-        public static function px($val, $var_val = null, $var_cond = null, $exit_mode = jdbg::EXIT_DONT) {
-                jdbg::pf($val, jdbg::$MODE, $var_val, $var_cond, $exit_mode, true);
+        public static function px($val, $var_val = null, $var_cond = null, $exit_mode = self::EXIT_DONT) {
+                self::pf($val, self::$MODE, $var_val, $var_cond, $exit_mode, true);
         }
 
-        public static function pfx($val, $mode = 'pre', $var_val = null, $var_cond = null, $exit_mode = jdbg::EXIT_DONT) {
-                jdbg::pf($val, $mode, $var_val, $var_cond, $exit_mode, true);
+        public static function pfx($val, $mode = 'pre', $var_val = null, $var_cond = null, $exit_mode = self::EXIT_DONT) {
+                self::pf($val, $mode, $var_val, $var_cond, $exit_mode, true);
         }
 
         public static function pex($val, $var_val = null, $var_cond = null) {
-                jdbg::px($val, $var_val, $var_cond, jdbg::EXIT_ALWAYS);
+                self::px($val, $var_val, $var_cond, self::EXIT_ALWAYS);
         }
 
         /**
@@ -146,7 +144,7 @@ class jdbg {
          * conditions are set as:
          *  actual value equivalence - simply give the value
          *  reg. expression - syntax: re:pattern
-         *  check if value is empty or not - use jdbg::IS_EMPTY or jdbg::IS_NOTEMPTY
+         *  check if value is empty or not - use self::IS_EMPTY or self::IS_NOTEMPTY
          *
          * available modes are:
          * pre
@@ -164,16 +162,16 @@ class jdbg {
          *
          * @@todo: ensure that xdebug is installed before printing out stack trace
          */
-        public static function pf($val, $mode = 'pre', $var_val = null, $var_cond = null, $exit_mode = jdbg::EXIT_DONT, $xdebug = false) {
-                if (!JDEBUG && !jdbg::$JDEBUG_OVERRIDE)
+        public static function pf($val, $mode = 'pre', $var_val = null, $var_cond = null, $exit_mode = self::EXIT_DONT, $xdebug = false) {
+                if (!JDEBUG && !self::$JDEBUG_OVERRIDE || self::$DONT)
                         return;
 
                 if (isset($var_cond)) {
                         $empty = !isset($var_val) || (empty($var_val) && $var_val != 0);
                         
-                        if ($var_cond === jdbg::IS_EMPTY && !$empty) {
+                        if ($var_cond === self::IS_EMPTY && !$empty) {
                                 return;
-                        } else if ($var_cond === jdbg::IS_NOTEMPTY && $empty) {
+                        } else if ($var_cond === self::IS_NOTEMPTY && $empty) {
                                 return;
                         } else if (preg_match('/re\:(.+)/', $var_cond, $m)) {
                                 if (!preg_match('/' . $m[1] . '/', $var_val)) {
@@ -216,8 +214,6 @@ class jdbg {
                                 else
                                         d($val);
                         }
-                } else if ($mode == 'firephp') {
-                        FB::log($val);
                 } else if ($mode == 'email') {
                         $query = 'SELECT email, name FROM #__users WHERE gid = 25 AND sendEmail = 1';
                         $db = JFactory::getDBO();
@@ -258,28 +254,28 @@ class jdbg {
                         static $alreadyReset = false;
                         
                         if (in_array('file', $mode)) {
-                                if (!isset(jdbg::$LOG_FILE)) {
-                                        jdbg::$LOG_FILE = JPATH_SITE . DS . 'tmp' . DS . 'jdbg.log';
+                                if (!isset(self::$LOG_FILE)) {
+                                        self::$LOG_FILE = JPATH_SITE . DS . 'tmp' . DS . 'jdbg.log';
                                 }
 
                                 $isreset = in_array('reset', $mode);
                                 
                                 $val = self::_val($msg) . (!empty($msg) ? "\n" : "") . self::_val($val);
                                 
-                                if (jdbg::$INTS) {
-                                        $val = date('Y-m-d H:i:s', time()) . "//" . jdbg::t(true, false) . "\n" . $val;
+                                if (self::$INTS) {
+                                        $val = date('Y-m-d H:i:s', time()) . "//" . self::t(true, false) . "\n" . $val;
                                 }
                                 
                                 if ($isreset && !$alreadyReset) {
                                         $alreadyReset = true;
-                                        file_put_contents(jdbg::$LOG_FILE, $val."\n");
+                                        file_put_contents(self::$LOG_FILE, $val."\n");
                                 } else {
-                                        file_put_contents(jdbg::$LOG_FILE, $val."\n", FILE_APPEND);
+                                        file_put_contents(self::$LOG_FILE, $val."\n", FILE_APPEND);
                                 }
                         }
                 }
 
-                if ($exit_mode == jdbg::EXIT_ALWAYS) {
+                if ($exit_mode == self::EXIT_ALWAYS) {
                         exit(0);
                 }
         }
@@ -323,7 +319,7 @@ class jdbg {
 
                 if (isset($time)) {
                         if ($print) {
-                                jdbg::p('Execution time is: ' . ($ctime - $time));
+                                self::p('Execution time is: ' . ($ctime - $time));
                         } else {
                                 return ($ctime - $time);
                         }
@@ -334,5 +330,30 @@ class jdbg {
                         $time = $ctime;
                 }
         }
-
+        
+        protected static $tracing = false, $method = '';
+        
+        public static function startTracing($option = 2, $method = 'xdebug') {
+                if (!in_array($method, get_loaded_extensions())) return;
+                
+                if ($method == 'xdebug') {
+                        xdebug_start_trace(JPATH_SITE.'/tmp/trace', $option);
+                } else if ($method == 'xhprof') {
+                        xhprof_enable($option);
+                }
+                self::$tracing = true;
+                self::$method = $method;
+        }
+        
+        public static function stopTracing() {
+                if (self::$tracing) {
+                        if (self::$method == 'xdebug') {
+                                xdebug_stop_trace();
+                        } else if (self::$method == 'xhprof') {
+                                $xhprof_data = xhprof_disable();
+                                var_dump($xhprof_data);
+                        }
+                        self::$tracing = false;
+                }
+        }
 }

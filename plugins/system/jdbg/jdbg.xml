@@ -11,11 +11,11 @@
         <description>
         <![CDATA[
         <p>jdbg is a nifty debugging tool that allows you to print in various formats and also enables you to set condition for the printing. Documentation can be found at <a href="http://jproven.com/extensions/jdbg">here</a>.</p>
+        <p>Notice: If you disable jdbg please make sure to remove or comment out calling PHP lines in yout source code or else it will hinder your site from rendering.</p>
         ]]>
         </description>
         <files>
                 <filename plugin="jdbg">jdbg.php</filename>
-                <folder>FirePHPCore</folder>
                 <folder>kint</folder>
                 <folder>krumo</folder>
         </files>
@@ -31,12 +31,11 @@
                                         <option value="dump">PLG_JDBG_OPTION_MODE_DUMP</option>
                                         <option value="area">PLG_JDBG_OPTION_MODE_AREA</option>
                                         <option value="log">PLG_JDBG_OPTION_MODE_LOG</option>
-                                        <option value="firephp">PLG_JDBG_OPTION_MODE_FIREPHP</option>
                                 </field>
 
                                 <field name="where" type="list" default="site" label="PLG_JDBG_FIELD_WHERE_LABEL" description="PLG_JDBG_FIELD_WHERE_DESC">
                                         <option value="site">PLG_JDBG_OPTION_WHERE_SITE</option>
-                                        <option value="admin">PLG_JDBG_OPTION_WHERE_ADMIN</option>
+                                        <option value="administrator">PLG_JDBG_OPTION_WHERE_ADMIN</option>
                                         <option value="both">PLG_JDBG_OPTION_WHERE_BOTH</option>
                                 </field>
 
