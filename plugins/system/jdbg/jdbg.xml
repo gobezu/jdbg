@@ -11,7 +11,7 @@
         <description>
         <![CDATA[
         <p>jdbg is a nifty debugging tool that allows you to print in various formats and also enables you to set condition for the printing. Documentation can be found at <a href="http://jproven.com/extensions/jdbg">here</a>.</p>
-        <p>Notice: If you disable jdbg please make sure to remove or comment out calling PHP lines in yout source code or else it will hinder your site from rendering.</p>
+        <p>Notice: If you disable jdbg please make sure to remove or comment out calling PHP lines in your source code or else it will hinder your site from rendering.</p>
         ]]>
         </description>
         <files>

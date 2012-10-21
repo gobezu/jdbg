@@ -165,7 +165,7 @@ class jdbg {
         public static function pf($val, $mode = 'pre', $var_val = null, $var_cond = null, $exit_mode = self::EXIT_DONT, $xdebug = false) {
                 if (!JDEBUG && !self::$JDEBUG_OVERRIDE || self::$DONT)
                         return;
-
+                
                 if (isset($var_cond)) {
                         $empty = !isset($var_val) || (empty($var_val) && $var_val != 0);
                         
