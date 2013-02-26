@@ -126,6 +126,10 @@ class jdbg {
                 self::p($val, $var_val, $var_cond, self::EXIT_ALWAYS);
         }
 
+        public static function pfile($val, $is_reset = true, $var_val = null, $var_cond = null) {
+                self::pf($val, 'file'.($is_reset ? ' reset' : ''), $var_val, $var_cond);
+        }
+
         public static function px($val, $var_val = null, $var_cond = null, $exit_mode = self::EXIT_DONT) {
                 self::pf($val, self::$MODE, $var_val, $var_cond, $exit_mode, true);
         }
