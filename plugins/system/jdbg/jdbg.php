@@ -181,7 +181,7 @@ class jdbg {
                                 if (!preg_match('/' . $m[1] . '/', $var_val)) {
                                         return;
                                 }
-                        } else if (!isset($var_val) && is_set($var_cond) || isset($var_val) && !isset($var_cond)) {
+                        } else if (!isset($var_val) && isset($var_cond) || isset($var_val) && !isset($var_cond)) {
                                 return;
                         } else if ($var_val !== $var_cond) {
                                 return;
